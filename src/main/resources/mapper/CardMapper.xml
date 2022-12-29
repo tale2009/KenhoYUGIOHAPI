@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="card.ygo.mapper.CardMapper">
+    <resultMap id="CardCheckName" type="card.ygo.pojo.CardCheckName">
+        <id column="id" property="id" />
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="Card" type="card.ygo.pojo.Card">
+        <id column="id" property="id" />
+        <result column="atk" property="atk" />
+        <result column="def" property="def" />
+        <result column="attribute" property="attribute" />
+        <result column="desc" property="desc" />
+        <result column="level" property="level" />
+        <result column="race" property="race" />
+        <result column="type" property="type" />
+    </resultMap>
+    <select id="listName" resultMap="Card">
+        select id,name from texts where name like CONCAT('%',#{name},'%')
+    </select>
+    <select id="detail" resultMap="Card">
+        select
+        data.id,
+        data.atk,
+        data.def,
+        data.attribute,
+        text.desc,
+        data.level,
+        data.race,
+        data.type,
+        text.name
+        from datas data
+        join texts text on data.id=text.id
+        where text.id=#{id}
+    </select>
+</mapper>
