@@ -11,11 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 
@@ -45,5 +43,30 @@ public class CardController {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ImageIO.write(read, "jpg", out);
         return out.toByteArray();
+    }
+
+    @GetMapping(value = "/yugioh/image/{id}.png",produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getbackgroupImage(@PathVariable("id")String id) throws IOException {
+        BufferedImage read = ImageIO.read(new FileInputStream(new File("D:\\card\\backgroup\\"+id+".png")));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(read, "png", out);
+        return out.toByteArray();
+    }
+
+    @GetMapping(value = "/yugioh/svg/{svg}", produces = {
+            "image/svg+xml"
+    })
+    public byte[] getsvg(@PathVariable("svg")String svg) throws IOException {//括号里参数为文件图片路径
+        byte[] data = new byte[0];
+        String inputFile = "D:\\card\\backgroup\\"+svg;
+        try {
+            InputStream inputStream = new FileInputStream(inputFile);
+            long fileSize = new File(inputFile).length();
+            data = new byte[(int) fileSize];
+            inputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }
